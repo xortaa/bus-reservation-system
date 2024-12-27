@@ -18,16 +18,14 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     // Routes accessible by all authenticated users
-    Route::get('buses', [BusController::class, 'index'])->name('buses.index');
     Route::get('routes', [RouteController::class, 'index'])->name('routes.index');
-    Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
     // Admin and Employee routes
     Route::middleware(['role:admin,employee'])->group(function () {
-        Route::resource('buses', BusController::class)->except('index');
-        Route::resource('routes', RouteController::class)->except('index');
+        Route::resource('buses', BusController::class)->except(['index']);
+        Route::resource('routes', RouteController::class)->except(['index']);
         Route::resource('schedules', ScheduleController::class);
-        Route::resource('reservations', ReservationController::class)->except('index');
+        Route::resource('reservations', ReservationController::class)->except(['index', 'create', 'store', 'show']);
     });
 
     // Admin only routes
@@ -35,10 +33,10 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
     });
 
-    // Customer specific routes
+    // Customer routes
     Route::middleware(['role:customer'])->group(function () {
-        Route::get('reservations/create', [ReservationController::class, 'create'])->name('customer.reservations.create');
-        Route::post('reservations', [ReservationController::class, 'store'])->name('customer.reservations.store');
+        Route::get('buses', [BusController::class, 'index'])->name('buses.index');
+        Route::resource('reservations', ReservationController::class)->only(['index', 'create', 'store', 'show']);
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

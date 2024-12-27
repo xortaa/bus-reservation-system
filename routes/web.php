@@ -19,31 +19,41 @@ Route::middleware(['auth'])->group(function () {
 
     // Routes accessible by all authenticated users
     Route::get('routes', [RouteController::class, 'index'])->name('routes.index');
+    Route::get('buses', [BusController::class, 'index'])->name('buses.index');
 
-    // Admin and Employee routes
-    Route::middleware(['role:admin,employee'])->group(function () {
+    // Admin routes
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class);
         Route::resource('buses', BusController::class)->except(['index']);
         Route::resource('routes', RouteController::class)->except(['index']);
         Route::resource('schedules', ScheduleController::class);
-        Route::resource('reservations', ReservationController::class)->except(['index', 'create', 'store', 'show']);
+        
     });
 
-    // Admin only routes
-    Route::middleware(['role:admin'])->group(function () {
-        Route::resource('users', UserController::class);
+    // Employee routes
+    Route::middleware(['role:employee'])->group(function () {
+        Route::resource('buses', BusController::class)->except(['index', 'destroy']);
+        Route::resource('routes', RouteController::class)->except(['index', 'destroy']);
+        Route::resource('schedules', ScheduleController::class)->except(['destroy']);
+        
     });
-
-    // Routes accessible by all roles (admin, employee, customer)
-    Route::get('buses', [BusController::class, 'index'])->name('buses.index');
 
     // Customer routes
-    Route::middleware(['role:customer'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
         Route::resource('reservations', ReservationController::class)->only(['index', 'create', 'store', 'show']);
     });
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Admin and Employee routes
+    Route::middleware(['auth', 'role:admin,employee'])->group(function () {
+        Route::resource('reservations', ReservationController::class)->except(['create', 'store']);
+    });
+
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

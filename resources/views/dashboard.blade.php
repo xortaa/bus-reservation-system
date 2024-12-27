@@ -15,8 +15,8 @@
                             <li><a href="{{ route('buses.index') }}" class="text-blue-600 hover:underline">Manage Buses</a></li>
                             <li><a href="{{ route('routes.index') }}" class="text-blue-600 hover:underline">Manage Routes</a></li>
                             <li><a href="{{ route('schedules.index') }}" class="text-blue-600 hover:underline">Manage Schedules</a></li>
-                            <li><a href="{{ route('users.index') }}" class="text-blue-600 hover:underline">Manage Users</a></li>
-                            <li><a href="{{ route('reservations.index') }}" class="text-blue-600 hover:underline">Manage Reservations</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Manage Users</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">View Logs</a></li>
                         </ul>
                     @elseif(auth()->user()->isEmployee())
                         <h3 class="text-lg font-semibold mb-4">Employee Dashboard</h3>
@@ -32,7 +32,7 @@
                             <li><a href="{{ route('buses.index') }}" class="text-blue-600 hover:underline">View Available Buses</a></li>
                             <li><a href="{{ route('routes.index') }}" class="text-blue-600 hover:underline">View Routes</a></li>
                             <li><a href="{{ route('reservations.index') }}" class="text-blue-600 hover:underline">My Reservations</a></li>
-                            <li><a href="{{ route('customer.reservations.create') }}" class="text-blue-600 hover:underline">Make a Reservation</a></li>
+                            <li><a href="{{ route('reservations.create') }}" class="text-blue-600 hover:underline">Make a Reservation</a></li>
                         </ul>
                     @endif
                 </div>

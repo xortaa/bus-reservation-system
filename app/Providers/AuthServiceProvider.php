@@ -11,6 +11,8 @@ class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
         Bus::class => BusPolicy::class,
+         Reservation::class => ReservationPolicy::class,
+        Schedule::class => SchedulePolicy::class,
     ];
 
     public function boot()

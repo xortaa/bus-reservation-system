@@ -12,12 +12,14 @@ class ScheduleController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Schedule::class);
         $schedules = Schedule::with(['bus', 'route'])->paginate(10);
         return view('schedules.index', compact('schedules'));
     }
 
     public function create()
     {
+        $this->authorize('create', Schedule::class);
         $buses = Bus::all();
         $routes = Route::all();
         return view('schedules.create', compact('buses', 'routes'));
@@ -25,6 +27,7 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Schedule::class);
         $validated = $request->validate([
             'bus_id' => 'required|exists:buses,bus_id',
             'route_id' => 'required|exists:routes,route_id',
@@ -45,12 +48,14 @@ class ScheduleController extends Controller
 
     public function show(Schedule $schedule)
     {
+        $this->authorize('view', $schedule);
         $schedule->load(['bus', 'route']);
         return view('schedules.show', compact('schedule'));
     }
 
     public function edit(Schedule $schedule)
     {
+        $this->authorize('update', $schedule);
         $buses = Bus::all();
         $routes = Route::all();
         return view('schedules.edit', compact('schedule', 'buses', 'routes'));
@@ -58,6 +63,7 @@ class ScheduleController extends Controller
 
     public function update(Request $request, Schedule $schedule)
     {
+        $this->authorize('update', $schedule);
         $validated = $request->validate([
             'bus_id' => 'required|exists:buses,bus_id',
             'route_id' => 'required|exists:routes,route_id',
@@ -78,6 +84,7 @@ class ScheduleController extends Controller
 
     public function destroy(Schedule $schedule)
     {
+        $this->authorize('delete', $schedule);
         try {
             $schedule->delete();
             Log::info('Schedule deleted successfully', ['schedule_id' => $schedule->schedule_id]);

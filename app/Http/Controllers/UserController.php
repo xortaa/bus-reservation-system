@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -24,12 +27,19 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,employee,customer',
+            'role' => ['required', Rule::in(['admin', 'employee', 'customer'])],
         ]);
 
-        User::create($validated);
+        $validated['password'] = Hash::make($validated['password']);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully');
+        try {
+            $user = User::create($validated);
+            Log::info('User created successfully', ['user_id' => $user->id]);
+            return redirect()->route('users.index')->with('success', 'User created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating user', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to create user. Please try again.')->withInput();
+        }
     }
 
     public function show(User $user)
@@ -46,19 +56,37 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,employee,customer',
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'role' => ['required', Rule::in(['admin', 'employee', 'customer'])],
         ]);
 
-        $user->update($validated);
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+            $validated['password'] = Hash::make($request->password);
+        }
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully');
+        try {
+            $user->update($validated);
+            Log::info('User updated successfully', ['user_id' => $user->id]);
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating user', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to update user. Please try again.')->withInput();
+        }
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully');
+        try {
+            $user->delete();
+            Log::info('User deleted successfully', ['user_id' => $user->id]);
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting user', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to delete user. Please try again.');
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('User Management') }}
+            {{ __('Schedules') }}
         </h2>
     </x-slot>
 
@@ -22,8 +22,8 @@
                     @endif
 
                     <div class="mb-4">
-                        <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Create New User
+                        <a href="{{ route('schedules.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Create New Schedule
                         </a>
                     </div>
 
@@ -31,13 +31,19 @@
                         <thead>
                             <tr>
                                 <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                    Name
+                                    Bus Number
                                 </th>
                                 <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                    Email
+                                    Route
                                 </th>
                                 <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                    Role
+                                    Departure Date
+                                </th>
+                                <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Departure Time
+                                </th>
+                                <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Available Seats
                                 </th>
                                 <th class="py-2 px-4 border-b border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     Actions
@@ -45,31 +51,33 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($users as $user)
+                            @forelse ($schedules as $schedule)
                                 <tr>
-                                    <td class="py-2 px-4 border-b border-gray-200">{{ $user->name }}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">{{ $user->email }}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">{{ ucfirst($user->role) }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{{ $schedule->bus->bus_number }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{{ $schedule->route->route_name }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{{ $schedule->departure_date }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{{ $schedule->departure_time }}</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{{ $schedule->available_seats }}</td>
                                     <td class="py-2 px-4 border-b border-gray-200">
-                                        <a href="{{ route('users.show', $user) }}" class="text-blue-600 hover:text-blue-900 mr-2">View</a>
-                                        <a href="{{ route('users.edit', $user) }}" class="text-yellow-600 hover:text-yellow-900 mr-2">Edit</a>
-                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline">
+                                        <a href="{{ route('schedules.show', $schedule) }}" class="text-blue-600 hover:text-blue-900 mr-2">View</a>
+                                        <a href="{{ route('schedules.edit', $schedule) }}" class="text-yellow-600 hover:text-yellow-900 mr-2">Edit</a>
+                                        <form action="{{ route('schedules.destroy', $schedule) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Are you sure you want to delete this schedule?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="py-2 px-4 border-b border-gray-200 text-center">No users found.</td>
+                                    <td colspan="6" class="py-2 px-4 border-b border-gray-200 text-center">No schedules found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
 
                     <div class="mt-4">
-                        {{ $users->links() }}
+                        {{ $schedules->links() }}
                     </div>
                 </div>
             </div>

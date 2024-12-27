@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bus extends Model
 {
-    use HasFactory;
+     use HasFactory;
 
     protected $primaryKey = 'bus_id';
 
@@ -21,5 +21,10 @@ class Bus extends Model
         'arrival_time',
         'image',
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'bus_id');
+    }
 }
 

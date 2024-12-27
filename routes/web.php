@@ -33,9 +33,11 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
     });
 
+    // Routes accessible by all roles (admin, employee, customer)
+    Route::get('buses', [BusController::class, 'index'])->name('buses.index');
+
     // Customer routes
     Route::middleware(['role:customer'])->group(function () {
-        Route::get('buses', [BusController::class, 'index'])->name('buses.index');
         Route::resource('reservations', ReservationController::class)->only(['index', 'create', 'store', 'show']);
     });
 

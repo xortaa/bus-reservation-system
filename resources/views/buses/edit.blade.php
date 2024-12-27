@@ -1,48 +1,85 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Edit Bus') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="container">
-    <h1>Edit Bus</h1>
-    <form action="{{ route('buses.update', $bus) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="mb-3">
-            <label for="bus_number" class="form-label">Bus Number</label>
-            <input type="text" class="form-control" id="bus_number" name="bus_number" value="{{ $bus->bus_number }}" required>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                            <strong class="font-bold">Please fix the following errors:</strong>
+                            <ul class="mt-2">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('buses.update', $bus) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="mb-4">
+                            <label for="bus_number" class="block text-gray-700 text-sm font-bold mb-2">Bus Number</label>
+                            <input type="text" name="bus_number" id="bus_number" value="{{ old('bus_number', $bus->bus_number) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('bus_number') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="seating_capacity" class="block text-gray-700 text-sm font-bold mb-2">Seating Capacity</label>
+                            <input type="number" name="seating_capacity" id="seating_capacity" value="{{ old('seating_capacity', $bus->seating_capacity) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('seating_capacity') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="driver_name" class="block text-gray-700 text-sm font-bold mb-2">Driver Name</label>
+                            <input type="text" name="driver_name" id="driver_name" value="{{ old('driver_name', $bus->driver_name) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('driver_name') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="departure_location" class="block text-gray-700 text-sm font-bold mb-2">Departure Location</label>
+                            <input type="text" name="departure_location" id="departure_location" value="{{ old('departure_location', $bus->departure_location) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('departure_location') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="destination" class="block text-gray-700 text-sm font-bold mb-2">Destination</label>
+                            <input type="text" name="destination" id="destination" value="{{ old('destination', $bus->destination) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('destination') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="departure_time" class="block text-gray-700 text-sm font-bold mb-2">Departure Time</label>
+                            <input type="time" name="departure_time" id="departure_time" value="{{ old('departure_time', $bus->departure_time) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('departure_time') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="arrival_time" class="block text-gray-700 text-sm font-bold mb-2">Arrival Time</label>
+                            <input type="time" name="arrival_time" id="arrival_time" value="{{ old('arrival_time', $bus->arrival_time) }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('arrival_time') border-red-500 @enderror" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Bus Image</label>
+                            <input type="file" name="image" id="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('image') border-red-500 @enderror" accept="image/*">
+                            @if ($bus->image)
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-600">Current Image:</p>
+                                    <img src="{{ asset('storage/' . $bus->image) }}" alt="Current Bus Image" class="mt-1 max-w-xs rounded-lg shadow-sm">
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Update Bus
+                            </button>
+                            <a href="{{ route('buses.index') }}" class="text-gray-600 hover:text-gray-800">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="seating_capacity" class="form-label">Seating Capacity</label>
-            <input type="number" class="form-control" id="seating_capacity" name="seating_capacity" value="{{ $bus->seating_capacity }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="driver_name" class="form-label">Driver Name</label>
-            <input type="text" class="form-control" id="driver_name" name="driver_name" value="{{ $bus->driver_name }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="departure_location" class="form-label">Departure Location</label>
-            <input type="text" class="form-control" id="departure_location" name="departure_location" value="{{ $bus->departure_location }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="destination" class="form-label">Destination</label>
-            <input type="text" class="form-control" id="destination" name="destination" value="{{ $bus->destination }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="departure_time" class="form-label">Departure Time</label>
-            <input type="time" class="form-control" id="departure_time" name="departure_time" value="{{ $bus->departure_time }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="arrival_time" class="form-label">Arrival Time</label>
-            <input type="time" class="form-control" id="arrival_time" name="arrival_time" value="{{ $bus->arrival_time }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="image" class="form-label">Bus Image</label>
-            <input type="file" class="form-control" id="image" name="image">
-            @if ($bus->image)
-                <img src="{{ asset('storage/' . $bus->image) }}" alt="Bus Image" class="mt-2" style="max-width: 200px;">
-            @endif
-        </div>
-        <button type="submit" class="btn btn-primary">Update Bus</button>
-    </form>
-</div>
-@endsection
+    </div>
+</x-app-layout>
 

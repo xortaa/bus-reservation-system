@@ -26,15 +26,19 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('buses', BusController::class)->except(['index']);
         Route::resource('routes', RouteController::class)->except(['index']);
-        Route::resource('schedules', ScheduleController::class);
+       
         
     });
+
+    Route::middleware(['auth', 'role:admin,employee'])->group(function () {
+    Route::resource('schedules', ScheduleController::class);
+});
 
     // Employee routes
     Route::middleware(['role:employee'])->group(function () {
         Route::resource('buses', BusController::class)->except(['index', 'destroy']);
         Route::resource('routes', RouteController::class)->except(['index', 'destroy']);
-        Route::resource('schedules', ScheduleController::class)->except(['destroy']);
+       
         
     });
 

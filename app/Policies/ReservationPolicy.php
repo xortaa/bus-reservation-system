@@ -12,7 +12,7 @@ class ReservationPolicy
 
     public function viewAny(User $user)
     {
-        return true;
+        return true; // Allow all authenticated users to view their reservations
     }
 
     public function view(User $user, Reservation $reservation)

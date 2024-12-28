@@ -29,8 +29,6 @@
                     @else
                         <h3 class="text-lg font-semibold mb-4">Customer Dashboard</h3>
                         <ul class="list-disc list-inside">
-                            <li><a href="{{ route('buses.index') }}" class="text-blue-600 hover:underline">View Available Buses</a></li>
-                            <li><a href="{{ route('routes.index') }}" class="text-blue-600 hover:underline">View Routes</a></li>
                             <li><a href="{{ route('reservations.index') }}" class="text-blue-600 hover:underline">My Reservations</a></li>
                             <li><a href="{{ route('reservations.create') }}" class="text-blue-600 hover:underline">Make a Reservation</a></li>
                         </ul>

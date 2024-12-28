@@ -14,4 +14,13 @@ class AppLayout extends Component
     {
         return view('layouts.app');
     }
+
+    private function registerLucideIcons()
+    {
+        $icons = ['Bird']; // Add more icon names as needed
+
+        foreach ($icons as $icon) {
+            Blade::component("lucide-{$icon}", "App\\View\\Components\\Lucide{$icon}");
+        }
+    }
 }

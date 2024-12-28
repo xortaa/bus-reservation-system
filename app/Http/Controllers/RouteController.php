@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Log;
 
 class RouteController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Route::class, 'route');
+    }
+
     public function index()
     {
         $routes = Route::paginate(10);
@@ -26,21 +31,17 @@ class RouteController extends Controller
             'departure_location' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
             'distance' => 'required|numeric|min:0',
-            'duration_hours' => 'required|integer|min:0',
-            'duration_minutes' => 'required|integer|min:0|max:59',
+            'duration' => 'required|string',
         ]);
 
-        $duration = sprintf('%02d:%02d:00', $validated['duration_hours'], $validated['duration_minutes']);
-
-        Route::create([
-            'route_name' => $validated['route_name'],
-            'departure_location' => $validated['departure_location'],
-            'destination' => $validated['destination'],
-            'distance' => $validated['distance'],
-            'duration' => $duration,
-        ]);
-
-        return redirect()->route('routes.index')->with('success', 'Route created successfully.');
+        try {
+            $route = Route::create($validated);
+            Log::info('Route created successfully', ['route_id' => $route->route_id]);
+            return redirect()->route('routes.index')->with('success', 'Route created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating route', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to create route. Please try again.')->withInput();
+        }
     }
 
     public function show(Route $route)
@@ -50,49 +51,39 @@ class RouteController extends Controller
 
     public function edit(Route $route)
     {
-        $duration_parts = explode(':', $route->duration);
-        $route->duration_hours = (int) $duration_parts[0];
-        $route->duration_minutes = (int) $duration_parts[1];
         return view('routes.edit', compact('route'));
     }
 
     public function update(Request $request, Route $route)
     {
-        Log::info('Update method called', $request->all());
-
         $validated = $request->validate([
             'route_name' => 'required|string|max:255',
             'departure_location' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
             'distance' => 'required|numeric|min:0',
-            'duration_hours' => 'sometimes|required|integer|min:0',
-            'duration_minutes' => 'sometimes|required|integer|min:0|max:59',
+            'duration' => 'required|string',
         ]);
 
-        if (isset($validated['duration_hours']) && isset($validated['duration_minutes'])) {
-            $duration = sprintf('%02d:%02d:00', $validated['duration_hours'], $validated['duration_minutes']);
-        } else {
-            $duration = $route->duration;
+        try {
+            $route->update($validated);
+            Log::info('Route updated successfully', ['route_id' => $route->route_id]);
+            return redirect()->route('routes.index')->with('success', 'Route updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating route', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to update route. Please try again.')->withInput();
         }
-
-        $route->update([
-            'route_name' => $validated['route_name'],
-            'departure_location' => $validated['departure_location'],
-            'destination' => $validated['destination'],
-            'distance' => $validated['distance'],
-            'duration' => $duration,
-        ]);
-
-        Log::info('Update result', ['route' => $route->toArray()]);
-
-        return redirect()->route('routes.index')->with('success', 'Route updated successfully.');
     }
 
     public function destroy(Route $route)
     {
-        $route->delete();
-
-        return redirect()->route('routes.index')->with('success', 'Route deleted successfully.');
+        try {
+            $route->delete();
+            Log::info('Route deleted successfully', ['route_id' => $route->route_id]);
+            return redirect()->route('routes.index')->with('success', 'Route deleted successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting route', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to delete route. Please try again.');
+        }
     }
 }
 

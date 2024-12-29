@@ -31,7 +31,7 @@ class RouteController extends Controller
             'departure_location' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
             'distance' => 'required|numeric|min:0',
-            'duration' => 'required|string',
+            'duration' => 'required|numeric|min:0',
         ]);
 
         try {
@@ -61,10 +61,15 @@ class RouteController extends Controller
             'departure_location' => 'required|string|max:255',
             'destination' => 'required|string|max:255',
             'distance' => 'required|numeric|min:0',
-            'duration' => 'required|string',
+            'duration' => 'required|numeric|min:0',
         ]);
 
         try {
+            $hours = floor($validated['duration']);
+            $minutes = floor(($validated['duration'] - $hours) * 60);
+            $seconds = floor((($validated['duration'] - $hours) * 60 - $minutes) * 60);
+            $validated['duration'] = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+
             $route->update($validated);
             Log::info('Route updated successfully', ['route_id' => $route->route_id]);
             return redirect()->route('routes.index')->with('success', 'Route updated successfully.');

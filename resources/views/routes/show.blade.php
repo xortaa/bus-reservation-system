@@ -13,15 +13,20 @@
                     <p><strong>Departure:</strong> {{ $route->departure_location }}</p>
                     <p><strong>Destination:</strong> {{ $route->destination }}</p>
                     <p><strong>Distance:</strong> {{ $route->distance }} km</p>
-                    <p><strong>Duration:</strong> {{ $route->duration }}</p>
+                    <p><strong>Duration:</strong> {{ number_format($route->durationInHours(), 2) }} hours</p>
                     
                     <div class="mt-4">
-                        <a href="{{ route('routes.edit', $route) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">Edit</a>
-                        <form action="{{ route('routes.destroy', $route) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="return confirm('Are you sure you want to delete this route?')">Delete</button>
-                        </form>
+                        @if(auth()->user()->isAdmin() || auth()->user()->isEmployee())
+                            <a href="{{ route('routes.edit', $route) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">Edit</a>
+                            @if(auth()->user()->isAdmin())
+                                <form action="{{ route('routes.destroy', $route) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="return confirm('Are you sure you want to delete this route?')">Delete</button>
+                                </form>
+                            @endif
+                        @endif
+                        <a href="{{ route('routes.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2">Back to List</a>
                     </div>
                 </div>
             </div>

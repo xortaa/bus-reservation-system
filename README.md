@@ -11,34 +11,37 @@ This project is a bus reservation system built with Laravel, offering functional
 
 ## Installation
 
-1. Clone the repository:
+1. Install XAMPP from the official website: https://www.apachefriends.org/index.html
+
+2. Start Apache and MySQL services from the XAMPP Control Panel.
+
+3. Open phpMyAdmin (usually at http://localhost/phpmyadmin) and create a new database named `bus_reservation_system`.
+
+4. Clone the repository into your XAMPP's `htdocs` directory:
+
+5. Clone the repository:
    ```
    git clone https://github.com/yourusername/bus-reservation-system.git
    cd bus-reservation-system
    ```
 
-2. Install PHP dependencies:
+6. Install PHP dependencies:
    ```
    composer install
    ```
 
-3. Install and compile frontend dependencies:
+7. Install and compile frontend dependencies:
    ```
    npm install
    npm run dev
    ```
 
-4. Create a copy of the `.env.example` file and rename it to `.env`:
-   ```
-   cp .env.example .env
-   ```
-
-5. Generate an application key:
+9. Generate an application key:
    ```
    php artisan key:generate
    ```
 
-6. Configure your database connection in the `.env` file:
+9. Configure your database connection in the `.env` file:
    ```
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
@@ -48,18 +51,18 @@ This project is a bus reservation system built with Laravel, offering functional
    DB_PASSWORD=your_database_password
    ```
 
-7. Run database migrations:
+10. Run database migrations:
    ```
    php artisan migrate
    ```
 
-8. Run the database seeder:
+11. Run the database seeder:
    ```
    php artisan db:seed
    ```
    This will create initial users with different roles (admin, employee, customer).
 
-9. Create a symbolic link for storage:
+12. Create a symbolic link for storage:
    ```
    php artisan storage:link
    ```
@@ -71,7 +74,7 @@ This project is a bus reservation system built with Laravel, offering functional
    php artisan serve
    ```
 
-2. Access the application in your web browser at `http://localhost:8000`
+2. Access the application in your web browser at `http://127.0.0.1:8000`
 
 ## Default Users
 

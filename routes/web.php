@@ -14,6 +14,9 @@ Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 Route::get('/home', [WelcomeController::class, 'index'])->name('home');
 
+Route::get('/buses/create', [BusController::class, 'create'])->name('buses.create');
+Route::get('/routes/create', [BusController::class, 'create'])->name('buses.create');
+
 // Remove or comment out the existing '/' route
 // Route::get('/', [WelcomeController::class, 'index']);
 

@@ -49,18 +49,19 @@
                     >
                         {{ __("Schedules") }}
                     </x-nav-link>
-                    <x-nav-link
-                        :href="route('logs.index')"
-                        :active="request()->routeIs('logs.index')"
-                    >
-                        {{ __("Logs") }}
-                    </x-nav-link>
+
                     @endif @if (auth()->user()->isAdmin())
                     <x-nav-link
                         :href="route('users.index')"
                         :active="request()->routeIs('users.*')"
                     >
                         {{ __("Users") }}
+                    </x-nav-link>
+                    <x-nav-link
+                        :href="route('logs.index')"
+                        :active="request()->routeIs('logs.index')"
+                    >
+                        {{ __("Logs") }}
                     </x-nav-link>
                     @endif
                     <x-nav-link
@@ -210,6 +211,12 @@
             >
                 {{ __("Users") }}
             </x-responsive-nav-link>
+            <x-nav-link
+                :href="route('logs.index')"
+                :active="request()->routeIs('logs.index')"
+            >
+                {{ __("Logs") }}
+            </x-nav-link>
             @endif
             <x-responsive-nav-link
                 :href="route('reservations.index')"

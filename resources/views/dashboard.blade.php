@@ -15,8 +15,8 @@
                             <li><a href="{{ route('buses.index') }}" class="text-blue-600 hover:underline">Manage Buses</a></li>
                             <li><a href="{{ route('routes.index') }}" class="text-blue-600 hover:underline">Manage Routes</a></li>
                             <li><a href="{{ route('schedules.index') }}" class="text-blue-600 hover:underline">Manage Schedules</a></li>
-                            <li><a href="#" class="text-blue-600 hover:underline">Manage Users</a></li>
-                            <li><a href="#" class="text-blue-600 hover:underline">View Logs</a></li>
+                                                       <li><a href="{{ route('users.index') }}" class="text-blue-600 hover:underline">Manage Users</a></li>
+                                                        <li><a href="{{ route('logs.index') }}" class="text-blue-600 hover:underline">View Logs</a></li>
                         </ul>
                     @elseif(auth()->user()->isEmployee())
                         <h3 class="text-lg font-semibold mb-4">Employee Dashboard</h3>

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
@@ -39,12 +40,13 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('routes', RouteController::class)->except(['index', 'show']);
         Route::resource('schedules', ScheduleController::class);
     });
-
+    
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('users', UserController::class);
     });
-
+    
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
